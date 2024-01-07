@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %}
+Edit Student
+{% endblock %}
+{% block content %}
+<style>
+    body {
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        margin-top: 30px;
+        width: 60%;
+        margin-left: 20%;
+    }
+    .form-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="form-container">
+                <h1 class="form-title">Edit Student Record</h1>
+                {% for row in rows %}
+                <form action="{{ url_for('editrec') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="studentID" class="form-label">Student ID</label>
+                        <input type="text" class="form-control" id="studentID" value="{{ row['rowid'] }}" readonly>
+                        <input type="hidden" name="rowid" value="{{ row['rowid'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="nm" value="{{ row['name'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="add" value="{{ row['addr'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" name="city" value="{{ row['city'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="zip" class="form-label">Zip Code</label>
+                        <input type="text" class="form-control" id="zip" name="zip" value="{{ row['zip'] }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

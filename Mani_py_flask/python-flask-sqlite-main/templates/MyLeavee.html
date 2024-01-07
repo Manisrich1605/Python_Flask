@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Request</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 30px;
+            margin-left: 24%;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-left: 20%;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            filter: brightness(95%);
+        }
+
+        .edit-btn {
+            background-color: #2980b9;
+            color: #fff;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .create-btn {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .create-btn a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .create-btn a:hover {
+            background-color: #2980b9;
+        }
+
+        .approval-status {
+            display: inline-block;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .approved {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .pending {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .rejected {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: rgba(0, 0, 255, 0.123);
+        }
+
+        .details-btn {
+            background-color: #29b971;
+            color: #fff;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding-top: 20px;
+        }
+
+        .card {
+            flex: 0 0 calc(25% - 20px);
+            /* Adjust card width and margin */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        .card-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'admin.html' %}
+    <div class="card-container">
+        {% for row in rows %}
+        <div class="card">
+            <div class="card-header">
+                Request ID: {{ row["rowid"] }}
+            </div>
+            <div class="card-body">
+                <p>Employee Name: {{ row["requestingemployee"] }}</p>
+                <p>Start Date: {{ row["startdate"] }}</p>
+                <p>End Date: {{ row["enddate"] }}</p>
+                <p>LeaveType: {{ row["requestcomments"] }}</p>
+                <p>Date Requested: {{ row["daterequested"] }}</p>
+                <p class="approval-status {{ row['approved'].lower() }}">
+                    Approved: {{ row["approved"] }}
+                </p>
+                <div class="action-buttons">
+                    <button type="button" class="action-btn edit-btn" style="background-color: darkgreen"
+                        data-row-id="{{ row['rowid'] }}" data-status="approved">Accept</button>
+                    <button type="button" class="action-btn edit-btn" style="background-color: red"
+                        data-row-id="{{ row['rowid'] }}" data-status="rejected">Reject</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Function to handle accept or reject button clicks
+        function updateStatus(rowId, status) {
+            // Send an AJAX POST request to update_status route
+            fetch('/update_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `row_id=${rowId}&status=${status}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Upon successful update, change the status in the table
+                    const statusCell = document.querySelector(`#status-${rowId}`);
+                    if (statusCell) {
+                        statusCell.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                        statusCell.className = `approval-status ${status.toLowerCase()}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        // Attach click event listeners to accept and reject buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const rowId = this.dataset.rowId;
+                const status = this.dataset.status;
+                // Call updateStatus function with row ID and status
+                updateStatus(rowId, status);
+            });
+        });
+    </script>
+</body>
+
+</html>

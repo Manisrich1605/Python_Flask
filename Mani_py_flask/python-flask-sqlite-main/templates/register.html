@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-bottom: 30px;
+            padding: 0;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .notebook {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            background-color: white;
+            overflow: hidden;
+            position: relative;
+
+        }
+        .cover {
+            width: 100%;
+            height: 300px;
+            background-image: url('../static/register.jpg');
+            background-size: cover;
+            border-bottom: 1px solid #ccc;
+        }
+        .notebook-content {
+            padding: 20px;
+        }
+        .form-container {
+            padding: 20px;
+        }
+        .form-container form {
+            width: 100%;
+        }
+        .form-group{
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            background-color: yellowgreen;
+            height: 33.33vh; /* 2/3 of the viewport height */
+            overflow: hidden;
+        }
+        .container img {
+            width: 100%;
+            height: 66.66vh; /* 1/3 of the viewport height */
+            object-fit: cover;
+        }
+        .container form {
+            padding: 20px;
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 50%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        a {
+            margin-top: 10px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="notebook">
+        <div class="cover"></div>
+        <div class="notebook-content">
+        <h1 style="text-align: center;">Registration Form</h1>
+        <div class="form-container">
+    <form method="POST" action="{{ url_for('register') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(class="form-control") }}
+            <!-- Display any validation errors -->
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control") }}
+            <!-- Display any validation errors -->
+            {% for error in form.password.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <br />
+        <br />
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <a href="{{url_for('login')}}"><strong>Already have an account? Login</strong></a>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Leave Request</title>
+</head>
+
+<body>
+    {% include 'dashboard.html' %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 30px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-left: 20%;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            filter: brightness(95%);
+        }
+
+        .edit-btn {
+            background-color: #2980b9;
+            color: #fff;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .create-btn {
+            margin-bottom: 20px;
+            text-align: left;
+            margin-left: 20%;
+        }
+
+        .create-btn a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .create-btn a:hover {
+            background-color: #2980b9;
+        }
+
+        .approval-status {
+            display: inline-block;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .approved {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .pending {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .rejected {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: rgba(0, 0, 255, 0.123);
+        }
+
+        .details-btn {
+            background-color: #29b971;
+            color: #fff;
+        }
+    </style>
+    <div class="create-btn">
+        <a href="{{ url_for('enternewleavereq') }}"><i class="fa-solid fa-plus"></i>Create</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Employee Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>LeaveType</th>
+                <th>Date Requested</th>
+                <th>Approved</th>
+                <th>Action-Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row["rowid"] }}</td>
+                <td>{{ row["requestingemployee"] }}</td>
+                <td>{{ row["startdate"] }}</td>
+                <td>{{ row["enddate"] }}</td>
+                <td>{{ row["requestcomments"] }}</td>
+                <td>{{ row["daterequested"] }}</td>
+                <td class="approval-status      
+                          {% if row['approved']|lower == 'pending' %} pending 
+                          {% endif %}">
+                    {{ row["approved"] }}
+                </td>
+                <td>
+                    <!-- Button to trigger the modal -->
+                    <button type="button" class="action-btn delete-btn" data-toggle="modal"
+                        data-target="#deleteModal{{ row['rowid'] }}">
+                        Cancel Request
+                    </button>-
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ row['rowid'] }}" tabindex="-1" role="dialog"
+                        aria-labelledby="deleteModalLabel{{ row['rowid'] }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ row['rowid'] }}">Confirm Delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to cancel this leave record?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <form action="{{ url_for('deleteleavereq') }}" method="POST">
+                                        <input type="hidden" name="id" value="{{ row['rowid'] }}">
+                                        <button type="submit" class="btn btn-danger">Cancel Request</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="path/to/bootstrap.js"></script>
+    <script src="path/to/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const rowid = this.dataset.rowid;
+                const status = document.getElementById(`status-${rowid}`).textContent.trim().toLowerCase();
+                if (status !== 'pending') {
+                    $('#deleteModal-' + rowid).modal('hide'); // Hide the modal if status is not pending
+                } else {
+                    $('#deleteModal-' + rowid).modal('show'); // Show the modal if status is pending
+                    document.getElementById('confirmDelete-' + rowid).dataset.rowid = rowid;
+                }
+            });
+        });
+        document.querySelectorAll('.confirm-delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const rowid = this.dataset.rowid;
+                $('#deleteModal-' + rowid).modal('hide'); // Hide the modal
+                fetch('/deleteleave', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: rowid })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+        // Change status color based on its value
+        document.querySelectorAll('.approval-status').forEach(status => {
+            const text = status.textContent.trim().toLowerCase();
+            status.classList.add(text); // Add a class based on status (e.g., pending, approved, rejected)
+            // Disable cancel request button if status is not pending
+            const button = status.parentElement.querySelector('.delete-btn');
+            if (text !== 'pending') {
+                button.disabled = true;
+            }
+        });
+     </script>
+</body>
+
+</html>

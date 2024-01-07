@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Students Data</title>
+</head>
+
+<body>
+    {% include 'dashboard.html' %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 30px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            margin-left: 20%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            filter: brightness(95%);
+        }
+
+        .edit-btn {
+            background-color: rgb(224, 204, 22);
+            color: #fff;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .create-btn {
+            margin-bottom: 20px;
+            text-align: left;
+            margin-left: 20%;
+        }
+
+        .create-btn a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .create-btn a:hover {
+            background-color: #2980b9;
+        }
+        .details-btn {
+            background-color: #29b971;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: rgba(0, 0, 255, 0.123);
+        }
+    </style>
+    <div class="create-btn">
+        <a href="{{ url_for('enternewleave') }}"><i class="fa-solid fa-plus"></i>Create</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Leave Type Name</th>
+                <th>Default Number Of Days</th>
+                <th>Action - Edit</th>
+                <th>Action - Details</th>
+                <th>Action - Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row["rowid"] }}</td>
+                <td>{{ row["leavetype"] }}</td>
+                <td>{{ row["defaultdays"] }}</td>
+                <td>
+                    <form action="{{ url_for('editleave') }}" method="POST">
+                        <input type="hidden" name="id" value="{{ row['rowid'] }}">
+                        <button type="submit" class="action-btn edit-btn">Update</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ url_for('leavetype_details', id=row['rowid']) }}"
+                        class="action-btn details-btn">Details</a>
+                </td>
+                <td>
+                    <!-- Button to trigger the modal -->
+                    <button type="button" class="action-btn delete-btn" data-toggle="modal"
+                        data-target="#deleteModal{{ row['rowid'] }}">
+                        Delete
+                    </button>
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ row['rowid'] }}" tabindex="-1" role="dialog"
+                        aria-labelledby="deleteModalLabel{{ row['rowid'] }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ row['rowid'] }}">Confirm Delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this leave record?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <form action="{{ url_for('deleteleave') }}" method="POST">
+                                        <input type="hidden" name="id" value="{{ row['rowid'] }}">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="path/to/bootstrap.js"></script>
+    <script src="path/to/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const rowid = this.dataset.rowid;
+                $('#deleteModal-' + rowid).modal('show'); // Show the modal
+                document.getElementById('confirmDelete-' + rowid).dataset.rowid = rowid;
+            });
+        });
+        document.querySelectorAll('.confirm-delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const rowid = this.dataset.rowid;
+                $('#deleteModal-' + rowid).modal('hide'); // Hide the modal
+                fetch('/deleteleave', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: rowid })
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

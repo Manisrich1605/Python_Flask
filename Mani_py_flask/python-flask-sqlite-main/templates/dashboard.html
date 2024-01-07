@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #eaebec;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 8px 12px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #111111;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #2c3e50;
+            border-radius: 4px;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #0f2842;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 2;
+        }
+
+        .topnav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 12px;
+            margin-left: 10px;
+        }
+
+        .topnav a:hover {
+            background-color: #2c3e50;
+            border-radius: 4px;
+        }
+
+        .body-content {
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidenav">
+        <br />
+        <br />
+        <br />
+        <br />
+        <div>&emsp;&emsp;&emsp;<i class="fa-solid fa-user"></i>
+            {{ "Hello User!" }}
+        </div>
+        <br />
+        <br />
+        <div>
+            <a href="{{ url_for('logout') }}" style="background-color: rgb(151, 209, 231)">&emsp;&emsp;<i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+        </div><br />
+        <a href="{{ url_for('home') }}">&emsp;&emsp;<i class="fa-solid fa-house"></i>Home</a><br />
+        <a href="{{ url_for('leavetype') }}">&emsp;&emsp;<i class="fa-sharp fa-solid fa-gears"></i>LeaveType Data</a><br />
+        <a href="{{ url_for('leaverequest') }}">&emsp;&emsp;<i class="fa-solid fa-code-pull-request"></i>LeaveRequest Data</a><br />
+        <a href="{{ url_for('display_employee_table') }}">&emsp;&emsp;<i class="fa-solid fa-users"></i>Employee</a><br />
+        <a href="{{ url_for('list') }}">&emsp;&emsp;<i class="fa-solid fa-table"></i>Student Data</a>
+    </div>
+    <div class="topnav">
+        <strong><a href="{{ url_for('home') }}" class="navbar-item">Leave Management</a></strong>
+    </div>
+    <div class="body-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>

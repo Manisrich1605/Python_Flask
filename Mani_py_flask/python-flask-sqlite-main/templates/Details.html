@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Type Details</title>
+    <style>
+        /* Styles for the main container */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Styles for the details container */
+        .details-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="details-container">
+        <br /><h1>Leave Type Details</h1><br /><br />
+        <p>Leave Type ID: {{ leavetype['rowid'] }}</p>
+        <p>Leave Type Name: {{ leavetype['leavetype'] }}</p>
+        <p>Default Number of Days: {{ leavetype['defaultdays'] }}</p>
+    </div>
+</body>
+
+</html>

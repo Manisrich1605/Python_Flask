@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}
+Add New Student
+{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="submit"],
+    textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+<form action="{{ url_for('addrec') }}" method="POST">
+    <h3>Please Add the New Student Information:</h3>
+    <label for="name">Name</label><br>
+    <input type="text" name="nm" id="name" required><br><br>
+    <label for="address">Address</label><br>
+    <textarea name="add" rows="4" required></textarea><br><br>
+    <label for="city">City</label><br>
+    <input type="text" name="city" id="city" required><br><br>
+    <label for="zip">Zip Code</label><br>
+    <input type="text" name="zip" id="zip" required><br><br>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
